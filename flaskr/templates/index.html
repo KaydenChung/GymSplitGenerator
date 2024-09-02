@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Article Analyzer</title>
+    <link rel="icon" type="image/png" href="icon.png">
+    <link rel="stylesheet" href="../static/indexStyles.css">
+</head>
+
+<body>
+
+    <div class="header-container">
+        <h1 class="title">Article Keyword Analyzing Tool</h1>
+        <h3 class="authors">Developed by Kayden Chung</h3>
+        <h3 class="authors">Assisted by Ali Al-Reda El-Zein</h3>
+    </div>
+
+    <form method="POST" enctype="multipart/form-data">
+
+        <div class="upload-container">
+            <h2>Upload PDF Files:</h2>
+            <input type="file" id="file-upload" name="articles" accept=".pdf" multiple required style="display:none;">
+            <label for="file-upload" class="upload-btn">Upload Files</label> 
+            <span id="upload-text">No file chosen</span>
+            <br><br>
+        </div>
+        <div class="keywords-container">
+            <h2>Input Keywords (Comma-Separated):</h2>
+            <textarea id="keywords" name="keywords" rows="2" cols="50" required></textarea><br><br>
+            <input class="submit-btn" type="submit" value="Submit">
+        </div>
+
+    </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('file-upload').addEventListener('change', function() {
+                var fileInput = document.getElementById('file-upload');
+                var fileCount = fileInput.files.length;
+                var fileName = fileCount === 1 ? fileInput.files[0].name : fileCount + ' Files Uploaded';
+                document.getElementById('upload-text').textContent = fileName;
+            });
+        });
+    </script>
+
+</body>
+
+</html>
