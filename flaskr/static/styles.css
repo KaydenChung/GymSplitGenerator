@@ -1,0 +1,94 @@
+/* Body */
+body {
+  background: #588157;
+  max-width: 600px;
+  padding: 1rem;
+  margin: 0 auto;
+}
+
+
+
+/* Header Container */
+.header-container {
+  color: #fefae0;
+  font-family: Roobert,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+  text-align: center;
+  margin-top: 5rem;
+}
+
+
+
+/* Button Container*/
+.button-container {
+  color: #fefae0;
+  font-family: Roobert,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+  text-align: center;
+  margin-top: 5rem;
+}
+.btn {
+  appearance: none;
+  background-color: #000000;
+  border: 2px solid #1A1A1A;
+  border-radius: 15px;
+  box-sizing: border-box;
+  color: #fefae0;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: normal;
+  margin: 0;
+  min-height: 60px;
+  min-width: 0;
+  outline: none;
+  padding: 16px 24px;
+  text-align: center;
+  text-decoration: none;
+  transition: all 300ms cubic-bezier(.23, 1, 0.32, 1);
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  width: 100%;
+  will-change: transform;
+}
+.btn:disabled {
+  pointer-events: none;
+}
+.btn:hover {
+  box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
+  transform: translateY(-2px);
+}
+.btn:active {
+  box-shadow: none;
+  transform: translateY(0);
+}
+
+form {
+  font-family: Roobert,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+  background: white;
+  padding: 3em;
+  height: 320px;
+  border-radius: 20px;
+  text-align: center;
+  
+  input {
+    padding: 0.5rem 2rem;
+    margin-bottom: 1rem;
+    border-left: 1px solid white;
+    border-top: 1px solid white;
+    border-radius: 100%;
+  }
+  &:hover {
+    margin: 20px;
+  }
+}
+::placeholder {
+  font-family: Roobert,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+  color: black;
+  opacity: 50%;
+}
+select {
+  padding: 0.5rem 2rem;
+  border: 1px solid black;
+  font-size: 1rem;
+}

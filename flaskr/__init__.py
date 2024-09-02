@@ -1,69 +1,75 @@
 # Library Imports
-from flask import Flask, render_template, request, redirect, url_for
-import PyPDF2
+from flask import Flask, render_template, request
+import google.generativeai as genai
+import os
+import re
 
 # Creating Flask App
 app = Flask(__name__)
 
-# Extract Text from PDF
-def extractText(file):
-    text = ""
-    try:
-        pdf_reader = PyPDF2.PdfReader(file)
-        for page_num in range(len(pdf_reader.pages)):
-            page = pdf_reader.pages[page_num]
-            text += page.extract_text()
-    except Exception as e:
-        print(f"Error Reading PDF: {e}")
-    return text
+def parseText(data):
+    questions = []
+    answers = []
+    tempAnswers = []
+    for item in data:
+        if item.strip() and not item.startswith(' '):
+            if tempAnswers:
+                answers.append(tempAnswers)
+                tempAnswers = []
+            questions.append(item)
+        elif item.strip() and item.startswith(' '):
+            tempAnswers.append(item.strip())
+    if tempAnswers:
+        answers.append(tempAnswers)
+    print("Questions:", questions)
+    print("Answers:", answers)
 
-# Search Keywords in Text
-def searchKeywords(filename, text, keywords):
-    # Split Text into Sentences
-    sentences = []
-    current_sentence = ""
-    for char in text:
-        if char in '.!?':
-            if current_sentence:
-                sentences.append(current_sentence.strip())
-                current_sentence = ""
-        else:
-            current_sentence += char
-    if current_sentence:
-        sentences.append(current_sentence.strip())
+@app.route("/")
+def index():
+    return render_template('index.html')
 
-    # Add Relevant Sentences to Data
-    data = []
-    for keyword in keywords:
-        counter = 1
-        for sentence in sentences:
-            if (len(sentence) < 400) and (keyword.lower() in sentence.lower()):
-                data.append({'filename': filename, 'keyword': keyword, 'count': counter, 'sentence': sentence.strip()})
-                counter += 1
-    return data
+
+#setting up the ai model 
+genai.configure(api_key="AIzaSyDG75dqGCZPTR_xDqEltEjkDLntCFNhprs")
+
+# Using `response_mime_type` requires either a Gemini 1.5 Pro or 1.5 Flash model
+model = genai.GenerativeModel('gemini-1.5-flash')
+
 
 # Flask App Handling
-@app.route("/", methods=['GET', 'POST'])
+@app.route("/form", methods=['GET', 'POST'])
 
-def index():
+def createForm():
     if request.method == 'POST':
-        files = request.files.getlist('articles')[::-1]
-        unfilteredKeywords = request.form['keywords'].split(',')
-        keywords = [keyword.strip() for keyword in unfilteredKeywords if keyword.strip()]
-        extendedData = []
-        for file in files:
-            if file and file.filename.endswith('.pdf'):
-                # Extract Text from PDF
-                text = extractText(file)
-                if not text:
-                    return f"No text extracted from {file.filename}."
-                # Search Keywords in Text
-                data = searchKeywords(file.filename, text, keywords)
-                extendedData.extend(data)
-            else:
-                return f"Invalid File Format: {file.filename}. Please upload a PDF file."
-        return render_template('results.html', data=extendedData)
-    return render_template('index.html')
+        if 'days' in request.form and 'fitness_level' in request.form:
+            days = request.form['days']
+            fitness_level = request.form['fitness_level']
+
+ 
+
+            prompt = f"""
+            Create a gym split for a person who works out {days} days a week with {fitness_level} fitness level.
+            Don't return anything besides five questions that will assist in creating this gym split
+            After each question provide a list of 3 possible answers for the question.
+            Your response should have absolutely no markdown formatting.
+            The response should contain no numbers, letters, or dashes infront of the question or answers.
+            """
+
+            response = model.generate_content(prompt)
+            questions = response.text
+
+            parseText(questions)
+
+            return render_template('form.html', question=questions)
+        else:
+            # Handle the form submission with answers
+            answers = {key: request.form[key] for key in request.form}
+            # Process the answers as needed
+            return render_template('answers_submitted.html', answers=answers)
+                
+    
+    return render_template('form.html')
+
 
 # Main
 if __name__ == '__main__':
